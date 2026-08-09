@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import API from '../../api'
-import { Link } from 'react-router-dom'
+import { useToast } from '../../components/ToastContext'
 
 export default function ProductsList(){
   const [products,setProducts]=useState<any[]>([])
   const [loading,setLoading]=useState(true)
+  const toast = useToast()
 
   useEffect(()=>{
     const t = localStorage.getItem('admin_token')
@@ -14,14 +15,14 @@ export default function ProductsList(){
 
   async function remove(id:string){
     if(!confirm('Delete product?')) return
-    try{ await API.delete(`/products/${id}`); setProducts(products.filter(p=>p._id!==id)); alert('Deleted') }catch(e:any){ alert(e?.response?.data?.message || 'Delete failed') }
+    try{ await API.delete(`/products/${id}`); setProducts(products.filter(p=>p._id!==id)); toast.showToast('Deleted','success') }catch(e:any){ toast.showToast(e?.response?.data?.message || 'Delete failed','error') }
   }
 
   return (
     <div style={{padding:20}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
         <h2>Products</h2>
-        <Link to="/admin/products/new"><button className="btn">Create Product</button></Link>
+        <a href="/admin/products/new"><button className="btn">Create Product</button></a>
       </div>
       {loading ? <p>Loading...</p> : (
         <div className="grid" style={{marginTop:12}}>
@@ -32,7 +33,7 @@ export default function ProductsList(){
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
                 <div style={{fontSize:13,color:'#6b7280'}}>{p.category}</div>
                 <div style={{display:'flex',gap:8}}>
-                  <Link to={`/admin/products/${p._id}`}><button> Edit </button></Link>
+                  <a href={`/admin/products/${p._id}`}><button> Edit </button></a>
                   <button onClick={()=>remove(p._id)}>Delete</button>
                 </div>
               </div>

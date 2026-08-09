@@ -12,3 +12,7 @@ export async function uploadToCloudinary(path:string){
   try{ fs.unlinkSync(path) }catch(e){}
   return result
 }
+
+export async function deleteFromCloudinary(publicId:string){
+  return cloudinary.uploader.destroy(publicId)
+}

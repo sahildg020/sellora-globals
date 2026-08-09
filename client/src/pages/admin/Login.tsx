@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import API, { setAuthToken } from '../../api'
+import { useToast } from '../../components/ToastContext'
 
 export default function Login(){
   const [email,setEmail]=useState('')
   const [password,setPassword]=useState('')
   const [loading,setLoading]=useState(false)
+  const toast = useToast()
   async function submit(e:React.FormEvent){
     e.preventDefault()
     setLoading(true)
@@ -13,9 +15,10 @@ export default function Login(){
       const token = res.data.token
       setAuthToken(token)
       localStorage.setItem('admin_token', token)
+      toast.showToast('Logged in', 'success')
       window.location.href = '/admin'
     }catch(err:any){
-      alert(err?.response?.data?.message || 'Login failed')
+      toast.showToast(err?.response?.data?.message || 'Login failed','error')
     }finally{setLoading(false)}
   }
   return (

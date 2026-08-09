@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 
 export default function auth(req: any, res: Response, next: NextFunction){
   const header = req.headers.authorization || ''
-  if(!header.startsWith('Bearer ')) return res.status(401).json({ message: 'No token' })
+  if(!header || !header.startsWith('Bearer ')) return res.status(401).json({ message: 'No token' })
   const token = header.split(' ')[1]
   try{
     const decoded:any = jwt.verify(token, process.env.JWT_SECRET || 'secret')

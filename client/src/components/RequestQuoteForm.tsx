@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import API from '../api'
+import { useToast } from '../components/ToastContext'
 
 export default function RequestQuoteForm({ presetProduct }: { presetProduct?: any }){
   const [fullName,setFullName]=useState('')
@@ -11,6 +12,7 @@ export default function RequestQuoteForm({ presetProduct }: { presetProduct?: an
   const [quantity,setQuantity]=useState('')
   const [message,setMessage]=useState('')
   const [loading,setLoading]=useState(false)
+  const toast = useToast()
 
   React.useEffect(()=>{ if(presetProduct) setProduct(presetProduct.name) },[presetProduct])
 
@@ -19,11 +21,11 @@ export default function RequestQuoteForm({ presetProduct }: { presetProduct?: an
     setLoading(true)
     try{
       await API.post('/enquiries',{ fullName, companyName:company, email, phone, country, productName:product, productId: presetProduct?._id, quantity, message })
-      alert('Enquiry submitted — we will contact you soon')
+      toast.showToast('Enquiry submitted — we will contact you soon','success')
       setFullName('');setCompany('');setEmail('');setPhone('');setCountry('');setQuantity('');setMessage('')
     }catch(err:any){
       console.error(err)
-      alert(err?.response?.data?.message || 'Submission failed')
+      toast.showToast(err?.response?.data?.message || 'Submission failed','error')
     }finally{setLoading(false)}
   }
 

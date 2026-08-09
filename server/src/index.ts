@@ -8,6 +8,7 @@ import enquiryRoutes from './routes/enquiries'
 import galleryRoutes from './routes/gallery'
 import Admin from './routes/admin'
 import errorHandler from './middleware/errorHandler'
+import rateLimit from 'express-rate-limit'
 
 dotenv.config()
 const PORT = process.env.PORT || 4000
@@ -16,10 +17,13 @@ const app = express()
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }))
 app.use(express.json())
 
+// Basic rate limiter for auth endpoints to mitigate brute-force
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, message: 'Too many login attempts, please try again later.' })
+
 // connect to DB
 connectDB().catch(err=>{ console.error('DB connection failed', err); process.exit(1) })
 
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authLimiter, authRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/enquiries', enquiryRoutes)
 app.use('/api/gallery', galleryRoutes)

@@ -14,5 +14,7 @@ export default async function sendEnquiryMail({ fullName, email, message, produc
   const html = `<p>New enquiry from <b>${fullName}</b> (${email})</p>
     <p>Product: ${product? product.name : 'N/A'}</p>
     <p>Message:</p><p>${message}</p>`
-  await transporter.sendMail({ from: process.env.GMAIL_USER, to: adminEmail, subject: 'New enquiry', html })
+  try{
+    await transporter.sendMail({ from: process.env.GMAIL_USER, to: adminEmail, subject: 'New enquiry', html })
+  }catch(e){ console.error('Error sending email', e) }
 }

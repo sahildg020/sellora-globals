@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import API from '../../api'
+import { useToast } from '../../components/ToastContext'
 
 export default function Enquiries(){
   const [list,setList]=useState<any[]>([])
   const [loading,setLoading]=useState(true)
   const [search,setSearch]=useState('')
+  const toast = useToast()
 
   useEffect(()=>{
     const t = localStorage.getItem('admin_token')
@@ -12,9 +14,9 @@ export default function Enquiries(){
     fetchData()
   },[])
 
-  async function fetchData(){ setLoading(true); try{ const r = await API.get('/enquiries'); setList(r.data) }catch(e){} finally{ setLoading(false) } }
+  async function fetchData(){ setLoading(true); try{ const r = await API.get('/enquiries'); setList(r.data) }catch(e:any){ toast.showToast('Failed to load enquiries','error') } finally{ setLoading(false) } }
 
-  async function changeStatus(id:string, status:string){ try{ await API.put(`/enquiries/${id}/status`, { status }); setList(list.map(l=> l._id===id ? { ...l, status } : l )) }catch(e:any){ alert(e?.response?.data?.message || 'Update failed') } }
+  async function changeStatus(id:string, status:string){ try{ await API.put(`/enquiries/${id}/status`, { status }); setList(list.map(l=> l._id===id ? { ...l, status } : l )); toast.showToast('Status updated','success') }catch(e:any){ toast.showToast(e?.response?.data?.message || 'Update failed','error') } }
 
   const filtered = list.filter(l=> !search || l.fullName.toLowerCase().includes(search.toLowerCase()) || l.email.toLowerCase().includes(search.toLowerCase()) || (l.productName||'').toLowerCase().includes(search.toLowerCase()))
 

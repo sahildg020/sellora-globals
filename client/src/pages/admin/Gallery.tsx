@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import API from '../../api'
+import { useToast } from '../../components/ToastContext'
 
 export default function Gallery(){
   const [items,setItems]=useState<any[]>([])
   const [file,setFile]=useState<File | null>(null)
   const [caption,setCaption]=useState('')
+  const toast = useToast()
 
   useEffect(()=>{ const t = localStorage.getItem('admin_token'); if(t) API.defaults.headers.common['Authorization'] = `Bearer ${t}`; fetch() },[])
 
-  async function fetch(){ try{ const r = await API.get('/gallery'); setItems(r.data) }catch(e){ console.error(e) } }
+  async function fetch(){ try{ const r = await API.get('/gallery'); setItems(r.data) }catch(e){ console.error(e); toast.showToast('Failed to load gallery','error') } }
 
-  async function upload(e:any){ e.preventDefault(); if(!file) return alert('Select file')
+  async function upload(e:any){ e.preventDefault(); if(!file) return toast.showToast('Select file','error')
     const fd = new FormData(); fd.append('file', file); fd.append('caption', caption)
-    try{ await API.post('/gallery', fd, { headers: {'Content-Type':'multipart/form-data'} }); setCaption(''); setFile(null); fetch(); alert('Uploaded') }catch(err:any){ alert(err?.response?.data?.message || 'Upload failed') }
+    try{ await API.post('/gallery', fd, { headers: {'Content-Type':'multipart/form-data'} }); setCaption(''); setFile(null); fetch(); toast.showToast('Uploaded','success') }catch(err:any){ toast.showToast(err?.response?.data?.message || 'Upload failed','error') }
   }
 
-  async function remove(id:string){ if(!confirm('Delete image?')) return; try{ await API.delete(`/gallery/${id}`); setItems(items.filter(i=>i._id!==id)); alert('Deleted') }catch(e:any){ alert(e?.response?.data?.message || 'Delete failed') } }
+  async function remove(id:string){ if(!confirm('Delete image?')) return; try{ await API.delete(`/gallery/${id}`); setItems(items.filter(i=>i._id!==id)); toast.showToast('Deleted','success') }catch(e:any){ toast.showToast(e?.response?.data?.message || 'Delete failed','error') } }
 
   return (
     <div style={{padding:20}}>

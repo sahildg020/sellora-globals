@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import API, { setAuthToken } from '../../api'
+import { useToast } from '../../components/ToastContext'
 
 export default function Dashboard(){
   const [stats,setStats]=useState<any>(null)
   const [tokenChecked,setTokenChecked]=useState(false)
+  const toast = useToast()
 
   useEffect(()=>{
     const t = localStorage.getItem('admin_token')
@@ -11,7 +13,7 @@ export default function Dashboard(){
     setTokenChecked(true)
   },[])
 
-  useEffect(()=>{ if(!tokenChecked) return; API.get('/admin/stats').then(r=>setStats(r.data)).catch(()=>{}) },[tokenChecked])
+  useEffect(()=>{ if(!tokenChecked) return; API.get('/admin/stats').then(r=>setStats(r.data)).catch(e=>{ toast.showToast('Unauthorized or server error','error') }) },[tokenChecked])
 
   function logout(){ setAuthToken(undefined); localStorage.removeItem('admin_token'); window.location.href = '/admin/login' }
 

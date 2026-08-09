@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import API from '../../api'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useToast } from '../../components/ToastContext'
 
 export default function ProductForm(){
   const { id } = useParams()
@@ -16,6 +17,7 @@ export default function ProductForm(){
   const [featured,setFeatured]=useState(false)
   const [available,setAvailable]=useState(true)
   const [files,setFiles]=useState<FileList | null>(null)
+  const toast = useToast()
 
   useEffect(()=>{
     const t = localStorage.getItem('admin_token')
@@ -46,9 +48,9 @@ export default function ProductForm(){
       }else{
         await API.post('/products', fd, { headers: {'Content-Type':'multipart/form-data'} })
       }
-      alert('Saved')
+      toast.showToast('Saved','success')
       navigate('/admin/products')
-    }catch(err:any){ console.error(err); alert(err?.response?.data?.message || 'Save failed') }
+    }catch(err:any){ console.error(err); toast.showToast(err?.response?.data?.message || 'Save failed','error') }
     finally{ setLoading(false) }
   }
 
