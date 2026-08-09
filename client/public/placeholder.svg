@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <rect width="100%" height="100%" fill="#f3f4f6"/>
+  <g fill="#0b3d91">
+    <rect x="40" y="60" width="200" height="140" rx="12" />
+    <rect x="260" y="60" width="280" height="140" rx="12" />
+  </g>
+  <text x="50%" y="320" text-anchor="middle" font-size="20" fill="#6b7280" font-family="Arial">Product image placeholder</text>
+</svg>

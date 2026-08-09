@@ -1,42 +1,45 @@
-# Sellora Globals
+# Updated README
 
-Full-stack Sellora Globals application (React + Vite + TypeScript frontend, Node + Express + TypeScript backend, MongoDB/Mongoose, JWT auth).
+This repository contains the Sellora Globals full-stack application (frontend + backend).
 
-Features
-- React + Vite + TypeScript frontend
-- Node.js + Express + TypeScript backend
-- MongoDB + Mongoose
-- JWT authentication
-- Admin dashboard
-- Product management
-- Enquiry management
-- Gallery management
-- Cloudinary integration
-- Gmail SMTP enquiry notifications
-- Seed script
+See the README in the root for basic instructions. The app includes:
 
-Setup
-1. Clone the repo
-2. Create .env files using .env.example values.
-3. Install dependencies for server and client:
+- React + Vite + TypeScript frontend (client/)
+- Express + TypeScript backend (server/)
+- MongoDB via mongoose
+- JWT authentication for admin
+- Cloudinary uploads for images
+- Nodemailer (Gmail SMTP) for enquiry notifications
+
+Local development
+
+1. Install dependencies
    - cd server && npm install
    - cd ../client && npm install
-4. Seed admin & sample data:
-   - cd server && npm run seed
-5. Start server and client in development
-   - cd server && npm run dev
-   - cd ../client && npm run dev
 
-Environment
-- See .env.example at project root and in server for placeholders. Do NOT commit real secrets.
+2. Create environment variables from .env.example files (root and server)
+
+3. Run the server
+   - cd server
+   - npm run dev
+
+4. Run the client
+   - cd client
+   - npm run dev
+
+Seeding admin account
+
+Set ADMIN_EMAIL and ADMIN_PASSWORD in your environment, then run:
+
+  cd server
+  npm run seed
 
 Deployment
-- Vercel config for client included (vercel.json)
-- Render config for server included (render.yaml)
 
-Admin credentials (seed uses environment variables):
-- ADMIN_EMAIL (set in .env)
-- ADMIN_PASSWORD (set in .env)
+Frontend: Vercel (client)
+Backend: Render (server)
+Database: MongoDB Atlas
+Images: Cloudinary
+Email: Gmail SMTP
 
-License
-MIT
+Keep secrets in the provider's secret store — do not commit them to the repository.
