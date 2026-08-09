@@ -1,0 +1,13 @@
+PORT: 4000
+build:
+  type: web_service
+  name: sellora-globals-server
+  env: node
+  plan: free
+  buildCommand: "npm install && npm run build"
+  startCommand: "npm start"
+  envVars:
+    - key: MONGO_URI
+      fromDatabase: MONGO_URI
+    - key: JWT_SECRET
+      fromDatabase: JWT_SECRET

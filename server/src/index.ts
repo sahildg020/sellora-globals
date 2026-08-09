@@ -1,0 +1,26 @@
+import express from 'express'
+import dotenv from 'dotenv'
+import cors from 'cors'
+import connectDB from './config/db'
+import authRoutes from './routes/auth'
+import productRoutes from './routes/products'
+import enquiryRoutes from './routes/enquiries'
+import galleryRoutes from './routes/gallery'
+
+dotenv.config()
+const PORT = process.env.PORT || 4000
+
+const app = express()
+app.use(cors())
+app.use(express.json())
+
+connectDB()
+
+app.use('/api/auth', authRoutes)
+app.use('/api/products', productRoutes)
+app.use('/api/enquiries', enquiryRoutes)
+app.use('/api/gallery', galleryRoutes)
+
+app.get('/', (req,res)=> res.send('Sellora Globals API'))
+
+app.listen(PORT, ()=> console.log(`Server running on ${PORT}`))
