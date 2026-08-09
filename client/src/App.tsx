@@ -1,10 +1,16 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 
 export default function App(){
   return (
-    <div style={{padding:20}}>
-      <h1>Sellora Globals</h1>
-      <p>Visit <a href="/admin">Admin Dashboard</a></p>
+    <div>
+      <Navbar />
+      <main style={{minHeight:'70vh'}}>
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   )
 }

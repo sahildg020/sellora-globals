@@ -6,4 +6,4 @@ const GallerySchema = new mongoose.Schema({
   caption: String
 }, { timestamps: true })
 
-export default mongoose.model('Gallery', GallerySchema)
+export default mongoose.models.Gallery || mongoose.model('Gallery', GallerySchema)

@@ -6,12 +6,13 @@ import authRoutes from './routes/auth'
 import productRoutes from './routes/products'
 import enquiryRoutes from './routes/enquiries'
 import galleryRoutes from './routes/gallery'
+import Admin from './routes/admin'
 
 dotenv.config()
 const PORT = process.env.PORT || 4000
 
 const app = express()
-app.use(cors())
+app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }))
 app.use(express.json())
 
 connectDB()
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/enquiries', enquiryRoutes)
 app.use('/api/gallery', galleryRoutes)
+app.use('/api/admin', Admin)
 
 app.get('/', (req,res)=> res.send('Sellora Globals API'))
 

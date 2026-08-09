@@ -8,7 +8,7 @@ import Product from '../models/Product'
 dotenv.config()
 
 async function seed(){
-  await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/sellora')
+  await connectDB()
   console.log('Connected')
   const adminEmail = process.env.ADMIN_EMAIL
   const adminPass = process.env.ADMIN_PASSWORD
@@ -17,7 +17,7 @@ async function seed(){
   const pw = await bcrypt.hash(adminPass, 10)
   await User.create({ email: adminEmail, password: pw, role: 'admin' })
   await Product.deleteMany({})
-  await Product.create({ title: 'Sample product', description: 'Demo product', price: 100 })
+  await Product.create({ name: 'Sample Product', slug: 'sample-product', category: 'Kitchen Products', shortDescription: 'Demo product', description: 'Demo product description', price: 100, images: [] })
   console.log('Seeded')
   process.exit(0)
 }
