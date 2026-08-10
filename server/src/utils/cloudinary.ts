@@ -15,11 +15,27 @@ cloudinary.config({
 })
 
 export async function uploadToCloudinary(path:string){
-  const result = await cloudinary.uploader.upload(path, { folder: 'sellora' })
-  try{ fs.unlinkSync(path) }catch(e){}
-  return result
+  try{
+    const result = await cloudinary.uploader.upload(path, { folder: 'sellora' })
+    try{ fs.unlinkSync(path) }catch(e){}
+    return result
+  }catch(err:any){
+    // Log the full error server-side for debugging (do not return sensitive details to clients)
+    console.error('Cloudinary upload error:', err && (err.message || err))
+    // Rethrow a sanitized error so callers can handle it appropriately
+    const e: any = new Error('Cloudinary upload failed')
+    e.original = err
+    throw e
+  }
 }
 
 export async function deleteFromCloudinary(publicId:string){
-  return cloudinary.uploader.destroy(publicId)
+  try{
+    return cloudinary.uploader.destroy(publicId)
+  }catch(err:any){
+    console.error('Cloudinary delete error:', err && (err.message || err))
+    const e: any = new Error('Cloudinary delete failed')
+    e.original = err
+    throw e
+  }
 }
