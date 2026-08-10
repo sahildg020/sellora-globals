@@ -1,3 +1,10 @@
+import dotenv from 'dotenv'
+
+// Ensure environment variables are loaded before configuring Cloudinary.
+// This fixes cases where other modules import this file before the app's
+// top-level dotenv.config() runs (imports are hoisted in ES modules).
+dotenv.config()
+
 import { v2 as cloudinary } from 'cloudinary'
 import fs from 'fs'
 
