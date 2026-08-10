@@ -25,10 +25,16 @@ router.post('/', auth, upload.array('images', 6), async (req:any,res)=>{
   const body = req.body
   const files = req.files || []
   const images:string[] = []
-  for(const f of files){
-    const r:any = await uploadToCloudinary(f.path)
-    images.push(r.secure_url)
+  try{
+    for(const f of files){
+      const r:any = await uploadToCloudinary(f.path)
+      images.push(r.secure_url)
+    }
+  }catch(err:any){
+    console.error('Product image upload failed:', err && (err.original || err.message || err))
+    return res.status(500).json({ message: 'Image upload failed' })
   }
+
   const prod = new Product({
     name: body.name,
     slug: body.slug,
@@ -48,10 +54,16 @@ router.post('/', auth, upload.array('images', 6), async (req:any,res)=>{
 router.put('/:id', auth, upload.array('images',6), async (req:any,res)=>{
   const files = req.files || []
   const images:string[] = []
-  for(const f of files){
-    const r:any = await uploadToCloudinary(f.path)
-    images.push(r.secure_url)
+  try{
+    for(const f of files){
+      const r:any = await uploadToCloudinary(f.path)
+      images.push(r.secure_url)
+    }
+  }catch(err:any){
+    console.error('Product image upload failed:', err && (err.original || err.message || err))
+    return res.status(500).json({ message: 'Image upload failed' })
   }
+
   const body = req.body
   const update:any = { ...body }
   if(images.length) update.images = images
